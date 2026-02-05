@@ -40,3 +40,7 @@ To let others use it without downloading:
 3. Wait a few minutes → your live URL will appear
 
 ## Project Structure
+your-repo/
+├── clipboard.html      # The only file you need — everything is inside
+└── README.md           # This file
+
