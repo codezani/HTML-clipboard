@@ -2,7 +2,6 @@
 
 A simple, browser-based tool to read from clipboard, copy text to clipboard, cut (copy + clear), and clear text — no installation required!
 
-[Live Demo → https://codezani.github.io/HTML-clipboard/](https://codezani.github.io/HTML-clipboard/)  
 
 ## Features
 
