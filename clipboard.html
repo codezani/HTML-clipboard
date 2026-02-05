@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Clipboard</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f0f2f5;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      direction: ltr;
+    }
+    h2 {
+      color: #333;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      resize: vertical;
+      background: white;
+      margin-bottom: 15px;
+    }
+    .buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      min-width: 110px;
+      transition: all 0.2s;
+    }
+    button:hover {
+      filter: brightness(1.08);
+    }
+    #paste { background: #4CAF50; color: white; }
+    #copy  { background: #2196F3; color: white; }
+    #cut   { background: #FF9800; color: white; }
+    #clear { background: #f44336; color: white; }
+    #message {
+      margin-top: 16px;
+      text-align: center;
+      color: #555;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+<body>
+
+<h2>My Clipboard Tool</h2>
+
+<textarea id="textArea" placeholder="Text will appear here..."></textarea>
+
+<div class="buttons">
+  <button id="paste">Paste from Clipboard</button>
+  <button id="copy">Copy to Clipboard</button>
+  <button id="cut">Cut to Clipboard</button>
+  <button id="clear">Clear Text</button>
+</div>
+
+<div id="message"></div>
+
+<script>
+const textarea = document.getElementById('textArea');
+const message = document.getElementById('message');
+
+async function showMsg(txt, ms = 2200) {
+  message.textContent = txt;
+  setTimeout(() => { message.textContent = ''; }, ms);
+}
+
+// 1. Read from clipboard
+document.getElementById('paste').addEventListener('click', async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    textarea.value = text;
+    showMsg('Text pasted from clipboard ✓');
+  } catch (err) {
+    showMsg('Failed to read clipboard — please allow permission');
+    console.error(err);
+  }
+});
+
+// 2. Copy
+document.getElementById('copy').addEventListener('click', async () => {
+  const text = textarea.value.trim();
+  if (!text) {
+    showMsg('Text is empty!');
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+    showMsg('Text copied to clipboard ✓');
+  } catch (err) {
+    showMsg('Copy failed');
+    console.error(err);
+  }
+});
+
+// 3. Cut (copy + clear)
+document.getElementById('cut').addEventListener('click', async () => {
+  const text = textarea.value.trim();
+  if (!text) {
+    showMsg('Text is empty!');
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+    textarea.value = '';
+    showMsg('Text cut and removed from here ✓');
+  } catch (err) {
+    showMsg('Cut failed');
+    console.error(err);
+  }
+});
+
+// 4. Clear all
+document.getElementById('clear').addEventListener('click', () => {
+  if (textarea.value.trim() === '') {
+    showMsg('Nothing to clear');
+    return;
+  }
+  textarea.value = '';
+  showMsg('Text cleared');
+});
+</script>
+
+</body>
+</html>
